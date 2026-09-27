@@ -6,14 +6,14 @@
 
 | Measure | Count | Composition |
 | --- | --- | --- |
-| C (content) | 10 | validated B 4 · answered Q 2 · accepted D 3 · active Discovery 1 |
+| C (content) | 3 | validated B 0 · answered Q 1 · accepted D 1 · active Discovery 1 |
 | V (uncertainty) | 6 | open Q 2 · pending B 2 · W below DoR 0 · uncovered surface 2 |
 
 ## Areas
 
 | Area | Title | C (content) | V (uncertainty) | Composition |
 | --- | --- | --- | --- | --- |
-| A-01 | Execution platform | 10 | 6 | C: validated B 4 · answered Q 2 · accepted D 3 · active Discovery 1; V: open Q 2 · pending B 2 · W below DoR 0 · uncovered surface 2 |
+| A-01 | Execution platform | 1 | 5 | C: validated B 0 · answered Q 0 · accepted D 1; V: open Q 2 · pending B 1 · W below DoR 0 · uncovered surface 2 |
 
 > Relevance view, not a partition: a node touching two areas counts in both; a W without goals counts in none. The Content health totals above are primary.
 
@@ -21,43 +21,35 @@
 
 | ID | Outcome | Fitness function | Status |
 | --- | --- | --- | --- |
-| G-01 | Define the feature/tp2-nvlink product contract | count; current=2 target=2 | verified |
+| G-02 | Deliver Qwen3.8-27B TP2 on dual RTX 3090s | count; current= target=2 | unverified |
 
 ## Work items
 
 | ID | Type | Title | Goals | Cynefin | DoR | Status | Critical |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| W-01 | spike | Map dual-GPU baselines and constraints | G-01 | complex | ⊤ | done |  |
-| W-02 | spike | Record confirmed dual-GPU scope | G-01 | clear | ⊤ | done |  |
-| W-03 | spike | Qualify SM86 shard maps for end-to-end TP2 | G-01 | complex | ⊤ | progress | ★ |
-| W-04 | feature | Implement full SM86 TP2 with NVLink for Qwen3.8-27B | G-01 | complicated | ⊤ | progress |  |
+| W-03 | spike | Qualify SM86 shard maps for end-to-end TP2 | G-02 | complex | ⊤ | ready | ★ |
+| W-04 | feature | Implement full SM86 TP2 with NVLink for Qwen3.8-27B | G-02 | complicated | ⊤ | progress | ★ |
 
 ## Decisions
 
 | ID | Title | Status | Supersedes |
 | --- | --- | --- | --- |
-| D-01 | Use current HEAD as integration base | accepted |  |
 | D-02 | Prefer full TP2 with NVLink transport | accepted |  |
-| D-03 | Adopt the focused dual-RTX-3090 scope | accepted |  |
 | D-04 | Select the measured SM86 shard map for TP2 delivery | proposed |  |
+| D-05 | Bounded upstream alignment before deeper divergence | rejected |  |
 
 ## Open questions
 
 | ID | Question | Cynefin | Targets | Status |
 | --- | --- | --- | --- | --- |
-| Q-01 | Which dual-GPU product scope applies? | complicated | G-01 | answered |
-| Q-02 | Can SM86 NVLink transport be graph-captured? | complicated | D-02 | answered |
 | Q-03 | Which SM86 shard map maximizes end-to-end performance? | complex | D-02 | open |
 | Q-04 | Which transport and collective profile is required by the winning shard map? | complicated |  | open |
+| Q-05 | Upstream synchronization value (SM86, artifacts, DFlash) | complicated |  | answered |
 
 ## Assumptions
 
 | ID | Assumption | Tests | Targets | Status |
 | --- | --- | --- | --- | --- |
-| B-01 | Local RTX 3090 peers expose NVLink |  |  | validated |
-| B-02 | Reference branches require architectural forward-porting |  |  | validated |
-| B-03 | Native CUDA qualification is currently unavailable |  |  | validated |
-| B-04 | SM86 NVLink transfers are graph-capturable | Q-02 |  | validated |
 | B-05 | Full TP2 outperforms partial graph parallelism | Q-03 |  | proposed |
 | B-06 | The selected SM86 shard map preserves numerical behavior and wins at confirmed workloads | Q-03 | W-03 | proposed |
 
@@ -71,23 +63,15 @@
 
 ```mermaid
 graph TD
-  G_01["G-01: Define the feature/tp2-nvlink product contract"]:::goal
-  W_01["W-01: Map dual-GPU baselines and constraints"]:::spike
-  W_02["W-02: Record confirmed dual-GPU scope"]:::spike
+  G_02["G-02: Deliver Qwen3.8-27B TP2 on dual RTX 3090s"]:::goal
   W_03["W-03: Qualify SM86 shard maps for end-to-end TP2"]:::spike,critical
-  W_04["W-04: Implement full SM86 TP2 with NVLink for Qwen3.8-27B"]:::progress
-  D_01["D-01: Use current HEAD as integration base"]:::decision
+  W_04["W-04: Implement full SM86 TP2 with NVLink for Qwen3.8-27B"]:::progress,critical
   D_02["D-02: Prefer full TP2 with NVLink transport"]:::decision
-  D_03["D-03: Adopt the focused dual-RTX-3090 scope"]:::decision
   D_04["D-04: Select the measured SM86 shard map for TP2 delivery"]:::decision
-  Q_01["Q-01: Which dual-GPU product scope applies?"]:::question
-  Q_02["Q-02: Can SM86 NVLink transport be graph-captured?"]:::question
+  D_05["D-05: Bounded upstream alignment before deeper divergence"]:::decision
   Q_03["Q-03: Which SM86 shard map maximizes end-to-end performance?"]:::question
   Q_04["Q-04: Which transport and collective profile is required by the winning shard map?"]:::question
-  B_01["B-01: Local RTX 3090 peers expose NVLink"]:::assumption
-  B_02["B-02: Reference branches require architectural forward-porting"]:::assumption
-  B_03["B-03: Native CUDA qualification is currently unavailable"]:::assumption
-  B_04["B-04: SM86 NVLink transfers are graph-capturable"]:::assumption
+  Q_05["Q-05: Upstream synchronization value (SM86, artifacts, DFlash)"]:::question
   B_05["B-05: Full TP2 outperforms partial graph parallelism"]:::assumption
   B_06["B-06: The selected SM86 shard map preserves numerical behavior and wins at confirmed workloads"]:::assumption
   Y_01["Y-01: Dual RTX 3090 product scope"]:::discovery
@@ -114,9 +98,10 @@ graph TD
   W_03 -->|produces| D_04
   W_03 -->|produces| Q_03
   W_03 -->|produces| Q_04
+  W_04 ==>|blocks| W_03
   W_04 -->|implements| D_02
   Y_01 -->|distills| D_03
-  class W_03 critical
+  class W_03,W_04 critical
 classDef area fill:#5a1e4a,color:#fff
 classDef goal fill:#1e3a5f,color:#fff
 classDef theme fill:#2a4a3a,color:#fff

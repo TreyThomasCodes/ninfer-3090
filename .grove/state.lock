@@ -1,49 +1,13 @@
 @grove 1
 # AUTO-GENERATED. Do not edit. Use `grove` CLI.
-# checksum: sha256:3c4941af1e88ec724d3e13b0ce1ac9177ff0343bd80139236f5ef847ccea814a
-g G-01 status=verified fitness_kind=count t_created=2026-09-26T20:48:18Z t_updated=2026-09-26T20:53:32Z "Define the feature/tp2-nvlink product contract"
+# checksum: sha256:b908bed987c5c1b6846b181fcc5f61742d0a16ec997131371e53452579d19191
+g G-02 status=unverified fitness_kind=count t_created=2026-09-27T01:49:47Z t_updated=2026-09-27T01:49:47Z "Deliver Qwen3.8-27B TP2 on dual RTX 3090s"
   area: A-01
   fitness_target: 2
-  fitness_current: 2
 
-w W-01 type=spike status=done cynefin=complex t_created=2026-09-26T20:48:18Z t_updated=2026-09-26T20:50:05Z "Map dual-GPU baselines and constraints"
-  goals: G-01
-  fitness: G-01=+1
-  surface: CMakeLists.txt, AGENTS.md, README.md, include/ninfer, src/core, src/artifact, src/ops, src/runtime, src/targets, tests, docs
-  ac:
-    | Current checkout, hardware topology, and product-contract conflicts are recorded with concrete anchors.
-    | The dual RTX 3090 and upstream TP2 references are compared by execution model, transport, support matrix, evidence, and integration risk.
-    | Blocking product choices and falsifiable assumptions are represented as Question, Assumption, or Decision records.
-  exit:
-    | Record a user-decidable product-scope question and one technically preferred integration direction without changing production code.
-  evidence_strategy:
-    | Use Git ancestry and overlap, active source and documentation, reference-branch design records, and local NVIDIA topology output.
-  evidence:
-    | Checkout evidence: README.md and CMakeLists.txt define RTX 3090 and SM86, while AGENTS.md and docs/performance.md retain RTX 5090 and SM120 claims; the current feature/tp2-nvlink branch equals origin/master.
-    | Hardware and reference evidence: two 24 GiB SM86 RTX 3090s expose NV4 with four active 14.062 GB/s links per GPU; nvlink-ref is a partial eager groupwise route, while tp2/master is a full split and captured-graph SM120 route.
-    | Integration evidence: nvlink-ref and tp2/master are 259 and 263 current commits behind, overlap 53 and 72 files changed since their merge bases, and yield 86 and 109 three-way conflict markers; Q-01 to Q-03, B-01 to B-05, and D-01 to D-02 record the outcomes.
-  why:
-    | The branch name and configured remotes imply dual-GPU intent, but the current product authorities still define conflicting one-GPU SM86 and one-GPU SM120 contracts.
-
-w W-02 type=spike status=done cynefin=clear t_created=2026-09-26T20:53:31Z t_updated=2026-09-26T20:53:32Z "Record confirmed dual-GPU scope"
-  goals: G-01
-  fitness: G-01=+1
-  surface: .grove
-  ac:
-    | Q-01 records the exact user-confirmed initial support matrix and exclusions.
-    | An accepted Decision records the product contract that future delivery must satisfy.
-  exit:
-    | The product scope is explicit, accepted, and available through the Grove graph.
-  evidence_strategy:
-    | Use the user's explicit confirmation and inspect the resulting Question and Decision records.
-  evidence:
-    | User explicitly confirmed the recommended scope; Q-01 is answered with the complete support matrix and exclusions, and D-03 is accepted with the same contract.
-  why:
-    | The confirmed scope must become durable project state before technical discovery continues.
-
-w W-03 type=spike status=progress cynefin=complex session=host:0a24ba375e797304 session_at=2026-09-26T21:01:24Z t_created=2026-09-26T21:00:58Z t_updated=2026-09-26T22:56:39Z "Qualify SM86 shard maps for end-to-end TP2"
-  goals: G-01
-  fitness: G-01=+0
+w W-03 type=spike status=ready cynefin=complex t_created=2026-09-26T21:00:58Z t_updated=2026-09-27T01:50:12Z "Qualify SM86 shard maps for end-to-end TP2"
+  goals: G-02
+  fitness: G-02=+1
   surface: src/core, src/ops, src/runtime, src/targets, tests, benchmarks, docs
   ac:
     | Independent Op-oracle checks pass for the selected full-TP2, partial-shard, and single-GPU routes at representative C1 and C8 shapes.
@@ -75,14 +39,14 @@ w W-03 type=spike status=progress cynefin=complex session=host:0a24ba375e797304 
     | Full-TP2 feasibility check: detached tp2/master commit 6a355d5a hard-fails CMake configuration for CMAKE_CUDA_ARCHITECTURES=86 because its current implementation accepts only 120a; it cannot be run as SM86 evidence without a forward port.
     | Matched MTP3 benchmark, same artifact/commit/toolchain, INT8 KV, draft window 3 with optimized draft head, warmup 1 plus 3 repetitions, pp512/tg256/pp2048+tg256: TP1→partial prefill +44.16%/+47.20%, decode +21.03%/+31.12% where measured, and combined total time -27.10% (6.54828s→4.77353s); combined MTP acceptance was identical at 94.9748% with accepted-per-position [192,189,186].
 
-w W-04 type=feature status=progress cynefin=complicated session=host:0a24ba375e797304 session_at=2026-09-26T23:15:58Z t_created=2026-09-26T23:15:51Z t_updated=2026-09-26T23:15:58Z "Implement full SM86 TP2 with NVLink for Qwen3.8-27B"
-  goals: G-01
-  fitness: G-01=+1
+w W-04 type=feature status=progress cynefin=complicated session=host:0a24ba375e797304 session_at=2026-09-27T01:50:12Z t_created=2026-09-26T23:15:51Z t_updated=2026-09-27T01:50:12Z "Implement full SM86 TP2 with NVLink for Qwen3.8-27B"
+  goals: G-02
+  fitness: G-02=+1
   surface: src, include, apps, bench, tests, tools
   ac:
     | The registered qwen3_8_27b groupwise-int artifact loads and executes full TP2 on two RTX 3090 SM86 devices with --devices 0,1 and NVLink peer transport.
     | Full TP2 passes independent Op-oracle and representative end-to-end correctness checks for prefill, decode, MTP3, prefix reuse, and C8 serving without changing the TP1 route.
-    | Full TP2 supports CUDA Graph capture/replay at the supported decode frontiers and records matched TP1, partial, and full-TP2 measurements for the declared workloads.
+    | Full TP2 supports CUDA Graph capture/replay at the supported decode frontiers and exposes the matched benchmark surface required by W-03.
   hypothesis:
     | Port the complete tensor-parallel execution and state ownership to the current SM86 runtime, using direct NVLink collectives so both RTX 3090s carry model execution rather than a partial rank-0 route.
   repro:
@@ -91,20 +55,11 @@ w W-04 type=feature status=progress cynefin=complicated session=host:0a24ba375e7
     | Full TP2 is the only delivered dual-GPU route; partial graph sharding remains a diagnostic baseline and is not a product alternative.
   evidence_strategy:
     | Use the SM86 qualification build and ctest, independent multi-device Op tests, real-artifact TP1/TP2 smoke and token/logit parity, CUDA graph tests, and matched bench/serve reports on the two local RTX 3090s.
-
-d D-01 status=accepted t_created=2026-09-26T20:49:47Z t_updated=2026-09-26T20:49:48Z "Use current HEAD as integration base"
-  context:
-    | Both reference implementations predate 259 or more current commits and conflict across the active execution ownership boundaries.
-  options:
-    | OC1: Merge the old RTX 3090 graph branch.
-    | OC2: Merge the RTX 5090 TP2 branch and retrofit SM86.
-    | OC3: Implement against current HEAD while mining both branches for qualified mechanisms and evidence.
-  decision:
-    | Use current HEAD as the sole implementation base and treat both remote branches as references.
-  consequences:
-    | Current Engine, Program, Op, artifact, and test ownership remains authoritative; superseded branch-local structures and claims are not imported wholesale.
-  validation:
-    | A future delivery graph maps every adopted mechanism to current owners and verifies supported behavior on the local dual-RTX-3090 system.
+  plan:
+    | Use feaf4dd0983fdaeb2ba4c06eec6da350e644fb3a..6a355d5a7e2184ccad38263494cfdf215b343b12 as the exact causal TP2 patch; the fork tip is a single direct child of that base.
+    | Classify changed hunks, not only files, as TP2 essential, TP2 infrastructure, Blackwell-specific, RTX 5090 no-P2P transport, YaRN, tests, CLI, or documentation.
+    | Port TP2 essential and TP2 infrastructure first into the current architecture; replace the no-P2P transport with the validated NVLink path and defer YaRN, Blackwell tuning, product surfaces, and documentation.
+    | Deliver the correct, benchmarkable full-TP2 candidate; W-03 owns comparative performance selection and final workload limits.
 
 d D-02 status=accepted t_created=2026-09-26T20:49:48Z t_updated=2026-09-26T23:15:52Z "Prefer full TP2 with NVLink transport"
   context:
@@ -120,20 +75,6 @@ d D-02 status=accepted t_created=2026-09-26T20:49:48Z t_updated=2026-09-26T23:15
   validation:
     | Close Q-02 and Q-03, then require Op-oracle evidence, real-artifact TP1 and TP2 behavior, and matched end-to-end performance at declared workloads.
 
-d D-03 status=accepted t_created=2026-09-26T20:53:30Z t_updated=2026-09-26T20:53:32Z "Adopt the focused dual-RTX-3090 scope"
-  context:
-    | The project needs a bounded first dual-GPU product contract before transport and shard-map experiments can define implementation work.
-  options:
-    | OC1: Restore the old partial groupwise graph route as-is.
-    | OC2: Port every 27B identity and YaRN extended context in one delivery.
-    | OC3: Add a focused Qwen3.8-27B groupwise-int dual route while preserving the current single-GPU product.
-  decision:
-    | Use one process and one resident model across two NVLink-connected RTX 3090s; preserve the single-GPU route; initially support Qwen3.8-27B groupwise-int Text, MTP, prefix reuse, CLI, and serving at the native 262,144-token ceiling.
-  consequences:
-    | Vision, Qwen3.6-35B-A3B, NVFP4, and YaRN extended context are outside the initial dual-GPU route and must not enlarge its first delivery.
-  validation:
-    | Qualify the exact dual route on the local pair with independent Op criteria, real-artifact behavior, single-GPU regression evidence, and matched end-to-end performance.
-
 d D-04 status=proposed t_created=2026-09-26T21:01:14Z t_updated=2026-09-26T21:01:15Z "Select the measured SM86 shard map for TP2 delivery"
   context:
     | The current references disagree on whether SM86 should use full tensor parallelism or partial graph parallelism.
@@ -146,26 +87,18 @@ d D-04 status=proposed t_created=2026-09-26T21:01:14Z t_updated=2026-09-26T21:01
   validation:
     | Close W-03 with independent Op-oracle and matched end-to-end evidence.
 
-q Q-01 status=answered cynefin=complicated t_created=2026-09-26T20:49:43Z t_updated=2026-09-26T20:53:30Z "Which dual-GPU product scope applies?"
-  why:
-    | The branch and remotes imply a two-device feature, while the active README, AGENTS.md, and inherited maintainer references define incompatible hardware and feature contracts.
-  hypothesis:
-    | This branch targets two NVLink-connected RTX 3090s, keeps the single-GPU route, and first qualifies Qwen3.8-27B groupwise-int at the native 262,144-token ceiling.
-  exit:
-    | The user selects supported hardware, artifact identities, context ceiling, Vision and speculative behavior, and whether the single-GPU route remains supported.
-  outcome:
-    | Confirmed scope: one process and one resident model across two NVLink-connected RTX 3090s; preserve the existing single-GPU route; initially qualify Qwen3.8-27B groupwise-int Text, MTP, prefix reuse, CLI, and serving at the native 262,144-token ceiling; defer Vision, 35B, NVFP4, and YaRN extended context.
-
-q Q-02 status=answered cynefin=complicated t_created=2026-09-26T20:49:43Z t_updated=2026-09-26T20:59:40Z "Can SM86 NVLink transport be graph-captured?"
-  why:
-    | The old RTX 3090 reference disables multi-device CUDA Graphs, while the newer TP2 design captures one fork-and-join graph using UVA device copies.
-  hypothesis:
-    | After bidirectional peer access is enabled, UVA cudaMemcpyAsync transfers between the RTX 3090s remain capturable and use NVLink rather than host staging.
-  exit:
-    | A focused SM86 probe captures and replays a two-device transfer with exact data validation, confirms the transfer path, and records eager and captured latency.
-  outcome:
-    | Yes for the measured SM86 pair: bidirectional peer access, event-enrolled second stream, UVA peer copies and a single two-device graph captured and replayed with exact bidirectional 16 MiB payloads twice; 2 graph memcpy nodes.
-    | NVLink counters measured 432 MiB Tx and Rx over four links during 27 repetitions; eager/captured median 0.661/0.656 ms for 16 MiB each way (driver 595.91.07). Driver API probe only: CUDA runtime integration and real-model scheduling remain unqualified without nvcc/build/artifact.
+d D-05 status=rejected t_created=2026-09-26T23:31:55Z t_updated=2026-09-26T23:38:58Z "Bounded upstream alignment before deeper divergence"
+  context:
+    | Q-05 establishes a v3 artifact incompatibility and a substantial model/runtime ownership migration since the fork last synchronized.
+  options:
+    | Retain the current base with pinned v2 artifacts and targeted correctness backports, or qualify an upstream-aligned v3 SM86 baseline before extending TP2 ownership.
+  decision:
+    | Recommend a separately qualified v3 SM86 baseline for long-term development, preserving supported fork behavior; do not make DFlash2 enablement or every upstream kernel optimization prerequisites. This proposal does not supersede D-01 without user approval.
+  consequences:
+    | The migration must cover loader, converter, model/runtime owners, tests and active authorities together; Blackwell tuning and disk artifact sharding do not supply SM86 performance or tensor parallelism.
+    | User clarified that TP2 success is the sole deliverable; maintaining or modernizing Don's fork has no independent value, especially if TP2 fails. A separately qualified upstream-alignment baseline is therefore not justified as a prerequisite.
+  validation:
+    | Require real v3 Qwen3.8 groupwise-int loading, Text/MTP/prefix/serving checks and matched single-3090 correctness, memory and throughput evidence before adopting the new TP2 base.
 
 q Q-03 status=open cynefin=complex t_created=2026-09-26T20:49:44Z t_updated=2026-09-26T21:01:24Z "Which SM86 shard map maximizes end-to-end performance?"
   why:
@@ -179,39 +112,15 @@ q Q-04 status=open cynefin=complicated t_created=2026-09-26T21:01:15Z t_updated=
   exit:
     | The winning route's required transport and collective profile is recorded as an implementation constraint or the question is dropped with a reason.
 
-b B-01 status=validated cynefin=clear t_created=2026-09-26T20:49:44Z t_updated=2026-09-26T20:49:45Z "Local RTX 3090 peers expose NVLink"
-  vm:
-    | Inspect GPU identity, compute capability, memory, topology, and link state with nvidia-smi.
-  threshold:
-    | Exactly two 24 GiB compute-capability 8.6 GPUs are connected by active bidirectional NVLink links.
-  result:
-    | Two NVIDIA GeForce RTX 3090 devices report compute capability 8.6 and 24,576 MiB each; topology is NV4 and all four links per GPU report 14.062 GB/s.
-
-b B-02 status=validated cynefin=complicated t_created=2026-09-26T20:49:45Z t_updated=2026-09-26T20:49:45Z "Reference branches require architectural forward-porting"
-  vm:
-    | Compare merge bases, commit distance, overlapping changed files, and three-way textual merge conflicts against current HEAD.
-  threshold:
-    | A reference more than 200 current commits behind with conflicts across active Engine, Program, Op, artifact, and test surfaces is not used as a merge base.
-  result:
-    | The RTX 3090 reference is 259 current commits behind, overlaps 53 changed files, and yields 86 conflict markers; the TP2 reference is 263 commits behind, overlaps 72 changed files, and yields 109 conflict markers.
-
-b B-03 status=validated cynefin=clear t_created=2026-09-26T20:49:46Z t_updated=2026-09-26T20:49:46Z "Native CUDA qualification is currently unavailable"
-  vm:
-    | Inspect nvcc availability and local build, artifact, and profile directories.
-  threshold:
-    | Native qualification requires nvcc plus a configured build and the explicit target artifact.
-  result:
-    | The host exposes both GPUs and CMake 4.2.3, but nvcc is absent and build, out, and profiles directories do not exist.
-
-b B-04 status=validated cynefin=complicated t_created=2026-09-26T20:49:46Z t_updated=2026-09-26T20:59:40Z "SM86 NVLink transfers are graph-capturable"
-  vm:
-    | Adapt the TP2 capture probe to SM86, enable peer access in both directions, and validate repeated cross-device copies inside one CUDA Graph.
-  threshold:
-    | Capture and replay succeed with exact payloads, no host staging, and transfer latency consistent with NVLink rather than PCIe host bounce.
-  result:
-    | On two RTX 3090s (driver 595.91.07), a CUDA driver API probe enabled bidirectional peer access, captured UVA cuMemcpyAsync on two event-linked streams in one graph (2 memcpy nodes), instantiated and replayed twice with exact 16 MiB payloads in both directions.
-    | nvidia-smi NVLink data counters rose 110592 KiB per link in each direction during 27 bidirectional copies, exactly 27 x 16384 KiB divided across four links; no host-staged copy was used.
-    | Median of 12 sequential 16 MiB each-way transfers: eager 0.661 ms, captured 0.656 ms; ~51 GB/s aggregate. Probe: python3 /tmp/grove_q02_probe.py using libcuda.so.1, not a compiled runtime/model qualification.
+q Q-05 status=answered cynefin=complicated t_created=2026-09-26T23:30:03Z t_updated=2026-09-26T23:38:58Z "Upstream synchronization value (SM86, artifacts, DFlash)"
+  exit:
+    | Identify the fetched upstream gap, artifact-version semantics, DFlash applicability, and a bounded recommendation without merging production code.
+  outcome:
+    | Compared fork ab5a4490 with fetched Neroued/ninfer master e31bc99b: merge base a140e7ae; 131 fork-only and 156 upstream-only commits; merge-tree reports 179 conflicted paths without changing the checkout.
+    | Current reader.cpp accepts v1/v2 with a 16-byte prefix; upstream v3 uses a 32-byte header, architecture/config, bindings and Uses, and optional file shards. Qwen3.8 download scripts still follow Hugging Face main. A magic-only patch is invalid; the upstream offline upgrader is v2-to-v3, not a solution for the old runtime.
+    | 35B DFlash is already present; Qwen3.8 DFlash2 is absent. Upstream RTX 5090 groupwise-int historical corpus results show 12.1 percent longer makespan than MTP3, with different revisions and generated continuations; no SM86 or TP2 gain is established.
+    | Prioritize artifact/runtime alignment and correctness review of b8786751, 03177b91 and b88c0f6f. Full upstream head also replaces target Variants with src/models/qwen3_5 and rewrites linear/GDN implementations, so it is an SM86 port rather than a routine merge.
+    | User scope correction: evaluate upstream changes only for their contribution to successful Qwen3.8 groupwise-int TP2 on dual RTX 3090. Artifact pinning can avoid v3 migration; correctness changes are relevant only where they block or materially affect TP2. No fork-maintenance or post-failure upkeep objective exists.
 
 b B-05 status=proposed cynefin=complex t_created=2026-09-26T20:49:46Z t_updated=2026-09-26T20:49:47Z "Full TP2 outperforms partial graph parallelism"
   vm:
@@ -259,5 +168,130 @@ e W-03 produces B-06 t_created=2026-09-26T21:01:15Z
 e W-03 produces D-04 t_created=2026-09-26T21:01:15Z
 e W-03 produces Q-03 t_created=2026-09-26T21:01:24Z
 e W-03 produces Q-04 t_created=2026-09-26T21:01:15Z
+e W-04 blocks W-03 t_created=2026-09-27T01:50:12Z
 e W-04 implements D-02 t_created=2026-09-26T23:15:52Z
 e Y-01 distills D-03 t_created=2026-09-26T20:53:32Z
+
+:archive
+g G-01 status=verified fitness_kind=count t_created=2026-09-26T20:48:18Z t_updated=2026-09-27T01:50:17Z "Define the feature/tp2-nvlink product contract"
+  area: A-01
+  fitness_target: 2
+  fitness_current: 2
+
+w W-01 type=spike status=done cynefin=complex t_created=2026-09-26T20:48:18Z t_updated=2026-09-27T01:50:17Z "Map dual-GPU baselines and constraints"
+  goals: G-01
+  fitness: G-01=+1
+  surface: CMakeLists.txt, AGENTS.md, README.md, include/ninfer, src/core, src/artifact, src/ops, src/runtime, src/targets, tests, docs
+  ac:
+    | Current checkout, hardware topology, and product-contract conflicts are recorded with concrete anchors.
+    | The dual RTX 3090 and upstream TP2 references are compared by execution model, transport, support matrix, evidence, and integration risk.
+    | Blocking product choices and falsifiable assumptions are represented as Question, Assumption, or Decision records.
+  exit:
+    | Record a user-decidable product-scope question and one technically preferred integration direction without changing production code.
+  evidence_strategy:
+    | Use Git ancestry and overlap, active source and documentation, reference-branch design records, and local NVIDIA topology output.
+  evidence:
+    | Checkout evidence: README.md and CMakeLists.txt define RTX 3090 and SM86, while AGENTS.md and docs/performance.md retain RTX 5090 and SM120 claims; the current feature/tp2-nvlink branch equals origin/master.
+    | Hardware and reference evidence: two 24 GiB SM86 RTX 3090s expose NV4 with four active 14.062 GB/s links per GPU; nvlink-ref is a partial eager groupwise route, while tp2/master is a full split and captured-graph SM120 route.
+    | Integration evidence: nvlink-ref and tp2/master are 259 and 263 current commits behind, overlap 53 and 72 files changed since their merge bases, and yield 86 and 109 three-way conflict markers; Q-01 to Q-03, B-01 to B-05, and D-01 to D-02 record the outcomes.
+  why:
+    | The branch name and configured remotes imply dual-GPU intent, but the current product authorities still define conflicting one-GPU SM86 and one-GPU SM120 contracts.
+
+w W-02 type=spike status=done cynefin=clear t_created=2026-09-26T20:53:31Z t_updated=2026-09-27T01:50:17Z "Record confirmed dual-GPU scope"
+  goals: G-01
+  fitness: G-01=+1
+  surface: .grove
+  ac:
+    | Q-01 records the exact user-confirmed initial support matrix and exclusions.
+    | An accepted Decision records the product contract that future delivery must satisfy.
+  exit:
+    | The product scope is explicit, accepted, and available through the Grove graph.
+  evidence_strategy:
+    | Use the user's explicit confirmation and inspect the resulting Question and Decision records.
+  evidence:
+    | User explicitly confirmed the recommended scope; Q-01 is answered with the complete support matrix and exclusions, and D-03 is accepted with the same contract.
+  why:
+    | The confirmed scope must become durable project state before technical discovery continues.
+
+d D-01 status=accepted t_created=2026-09-26T20:49:47Z t_updated=2026-09-27T01:50:17Z "Use current HEAD as integration base"
+  context:
+    | Both reference implementations predate 259 or more current commits and conflict across the active execution ownership boundaries.
+  options:
+    | OC1: Merge the old RTX 3090 graph branch.
+    | OC2: Merge the RTX 5090 TP2 branch and retrofit SM86.
+    | OC3: Implement against current HEAD while mining both branches for qualified mechanisms and evidence.
+  decision:
+    | Use current HEAD as the sole implementation base and treat both remote branches as references.
+  consequences:
+    | Current Engine, Program, Op, artifact, and test ownership remains authoritative; superseded branch-local structures and claims are not imported wholesale.
+  validation:
+    | A future delivery graph maps every adopted mechanism to current owners and verifies supported behavior on the local dual-RTX-3090 system.
+
+d D-03 status=accepted t_created=2026-09-26T20:53:30Z t_updated=2026-09-27T01:50:17Z "Adopt the focused dual-RTX-3090 scope"
+  context:
+    | The project needs a bounded first dual-GPU product contract before transport and shard-map experiments can define implementation work.
+  options:
+    | OC1: Restore the old partial groupwise graph route as-is.
+    | OC2: Port every 27B identity and YaRN extended context in one delivery.
+    | OC3: Add a focused Qwen3.8-27B groupwise-int dual route while preserving the current single-GPU product.
+  decision:
+    | Use one process and one resident model across two NVLink-connected RTX 3090s; preserve the single-GPU route; initially support Qwen3.8-27B groupwise-int Text, MTP, prefix reuse, CLI, and serving at the native 262,144-token ceiling.
+  consequences:
+    | Vision, Qwen3.6-35B-A3B, NVFP4, and YaRN extended context are outside the initial dual-GPU route and must not enlarge its first delivery.
+  validation:
+    | Qualify the exact dual route on the local pair with independent Op criteria, real-artifact behavior, single-GPU regression evidence, and matched end-to-end performance.
+
+q Q-01 status=answered cynefin=complicated t_created=2026-09-26T20:49:43Z t_updated=2026-09-27T01:50:17Z "Which dual-GPU product scope applies?"
+  why:
+    | The branch and remotes imply a two-device feature, while the active README, AGENTS.md, and inherited maintainer references define incompatible hardware and feature contracts.
+  hypothesis:
+    | This branch targets two NVLink-connected RTX 3090s, keeps the single-GPU route, and first qualifies Qwen3.8-27B groupwise-int at the native 262,144-token ceiling.
+  exit:
+    | The user selects supported hardware, artifact identities, context ceiling, Vision and speculative behavior, and whether the single-GPU route remains supported.
+  outcome:
+    | Confirmed scope: one process and one resident model across two NVLink-connected RTX 3090s; preserve the existing single-GPU route; initially qualify Qwen3.8-27B groupwise-int Text, MTP, prefix reuse, CLI, and serving at the native 262,144-token ceiling; defer Vision, 35B, NVFP4, and YaRN extended context.
+
+q Q-02 status=answered cynefin=complicated t_created=2026-09-26T20:49:43Z t_updated=2026-09-27T01:50:17Z "Can SM86 NVLink transport be graph-captured?"
+  why:
+    | The old RTX 3090 reference disables multi-device CUDA Graphs, while the newer TP2 design captures one fork-and-join graph using UVA device copies.
+  hypothesis:
+    | After bidirectional peer access is enabled, UVA cudaMemcpyAsync transfers between the RTX 3090s remain capturable and use NVLink rather than host staging.
+  exit:
+    | A focused SM86 probe captures and replays a two-device transfer with exact data validation, confirms the transfer path, and records eager and captured latency.
+  outcome:
+    | Yes for the measured SM86 pair: bidirectional peer access, event-enrolled second stream, UVA peer copies and a single two-device graph captured and replayed with exact bidirectional 16 MiB payloads twice; 2 graph memcpy nodes.
+    | NVLink counters measured 432 MiB Tx and Rx over four links during 27 repetitions; eager/captured median 0.661/0.656 ms for 16 MiB each way (driver 595.91.07). Driver API probe only: CUDA runtime integration and real-model scheduling remain unqualified without nvcc/build/artifact.
+
+b B-01 status=validated cynefin=clear t_created=2026-09-26T20:49:44Z t_updated=2026-09-27T01:50:17Z "Local RTX 3090 peers expose NVLink"
+  vm:
+    | Inspect GPU identity, compute capability, memory, topology, and link state with nvidia-smi.
+  threshold:
+    | Exactly two 24 GiB compute-capability 8.6 GPUs are connected by active bidirectional NVLink links.
+  result:
+    | Two NVIDIA GeForce RTX 3090 devices report compute capability 8.6 and 24,576 MiB each; topology is NV4 and all four links per GPU report 14.062 GB/s.
+
+b B-02 status=validated cynefin=complicated t_created=2026-09-26T20:49:45Z t_updated=2026-09-27T01:50:17Z "Reference branches require architectural forward-porting"
+  vm:
+    | Compare merge bases, commit distance, overlapping changed files, and three-way textual merge conflicts against current HEAD.
+  threshold:
+    | A reference more than 200 current commits behind with conflicts across active Engine, Program, Op, artifact, and test surfaces is not used as a merge base.
+  result:
+    | The RTX 3090 reference is 259 current commits behind, overlaps 53 changed files, and yields 86 conflict markers; the TP2 reference is 263 commits behind, overlaps 72 changed files, and yields 109 conflict markers.
+
+b B-03 status=validated cynefin=clear t_created=2026-09-26T20:49:46Z t_updated=2026-09-27T01:50:17Z "Native CUDA qualification is currently unavailable"
+  vm:
+    | Inspect nvcc availability and local build, artifact, and profile directories.
+  threshold:
+    | Native qualification requires nvcc plus a configured build and the explicit target artifact.
+  result:
+    | The host exposes both GPUs and CMake 4.2.3, but nvcc is absent and build, out, and profiles directories do not exist.
+
+b B-04 status=validated cynefin=complicated t_created=2026-09-26T20:49:46Z t_updated=2026-09-27T01:50:17Z "SM86 NVLink transfers are graph-capturable"
+  vm:
+    | Adapt the TP2 capture probe to SM86, enable peer access in both directions, and validate repeated cross-device copies inside one CUDA Graph.
+  threshold:
+    | Capture and replay succeed with exact payloads, no host staging, and transfer latency consistent with NVLink rather than PCIe host bounce.
+  result:
+    | On two RTX 3090s (driver 595.91.07), a CUDA driver API probe enabled bidirectional peer access, captured UVA cuMemcpyAsync on two event-linked streams in one graph (2 memcpy nodes), instantiated and replayed twice with exact 16 MiB payloads in both directions.
+    | nvidia-smi NVLink data counters rose 110592 KiB per link in each direction during 27 bidirectional copies, exactly 27 x 16384 KiB divided across four links; no host-staged copy was used.
+    | Median of 12 sequential 16 MiB each-way transfers: eager 0.661 ms, captured 0.656 ms; ~51 GB/s aggregate. Probe: python3 /tmp/grove_q02_probe.py using libcuda.so.1, not a compiled runtime/model qualification.
